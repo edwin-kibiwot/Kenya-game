@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kenya Quiz for Cash</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(120deg, #38ef7d 0%, #11998e 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 440px;
+      margin: 36px auto;
+      padding: 32px 22px 24px 22px;
+      background: rgba(255,255,255,0.98);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #11998e;
+      margin-bottom: 10px;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 12px #abf6d7;
+    }
+    .notice {
+      background: #ecf7f4;
+      border-left: 5px solid #06bc75;
+      color: #155948;
+      border-radius: 6px;
+      padding: 10px 18px;
+      margin: 14px 0 24px 0;
+      font-size: 1.08em;
+      box-shadow: 0 2px 8px #e3f7ee;
+    }
+    input[type="text"] {
+      width: 90%;
+      padding: 11px 12px;
+      font-size: 1em;
+      border: 1.5px solid #b2f1d6;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      outline: none;
+      transition: border 0.2s;
+      background: #f7fffd;
+    }
+    input[type="text"]:focus {
+      border-color: #11998e;
+    }
+    button {
+      padding: 12px 28px;
+      margin: 12px 8px 0 8px;
+      font-size: 1.1em;
+      font-family: 'Roboto', Arial, sans-serif;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: linear-gradient(120deg, #38ef7d 0%, #11998e 100%);
+      color: white;
+      box-shadow: 0 2px 8px #b2f1d6;
+      transition: background 0.2s, transform 0.12s;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(120deg, #11998e 0%, #38ef7d 100%);
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 4px 16px #abf6d7;
+    }
+    #loading {
+      margin: 18px 0;
+      color: #11998e;
+      font-size: 1.1em;
+      display: none;
+    }
+    #quizSection {
+      margin-top: 24px;
+      animation: fadeIn 0.8s;
+    }
+    #question {
+      font-size: 1.13em;
+      font-weight: 500;
+      color: #202f27;
+      margin-bottom: 16px;
+      min-height: 38px;
+      letter-spacing: 0.1px;
+    }
+    #answers {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    #answers button {
+      width: 100%;
+      font-size: 1em;
+      background: #f7fffd;
+      color: #11998e;
+      border: 1.5px solid #b2f1d6;
+      margin: 0;
+      border-radius: 6px;
+      box-shadow: none;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    #answers button:hover, #answers button:focus {
+      background: #11998e;
+      color: #fff;
+      border: 1.5px solid #11998e;
+      box-shadow: 0 2px 8px #abf6d7;
+    }
+    #score {
+      font-weight: bold;
+      color: #11998e;
+      font-size: 1.18em;
+      margin-left: 4px;
+    }
+    #leaderboard {
+      margin-top: 32px;
+      background: #f7fffd;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #e2f7e6;
+      padding: 16px 12px 14px 12px;
+      text-align: left;
+    }
+    #leaderboard h3 {
+      color: #11998e;
+      margin-top: 0;
+      margin-bottom: 13px;
+      font-size: 1.15em;
+      letter-spacing: 0.5px;
+    }
+    #leaderboardList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.02em;
+    }
+    #leaderboardList li {
+      padding: 7px 0;
+      border-bottom: 1px solid #e3f7ee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #leaderboardList li:last-child {
+      border-bottom: none;
+    }
+    .rank-badge {
+      background: linear-gradient(120deg, #38ef7d 0%, #11998e 100%);
+      color: #fff;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-weight: 700;
+      font-size: 1em;
+    }
+    .footer {
+      margin-top: 38px;
+      font-size: 14px;
+      color: #888;
+      letter-spacing: 0.4px;
+      text-align: center;
+      opacity: 0.7;
+    }
+    @media (max-width: 570px) {
+      .container {
+        max-width: 98vw;
+        padding: 12vw 2vw 6vw 2vw;
+      }
+      #leaderboard {
+        padding: 11px 4vw 10px 4vw;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px);}
+      to { opacity: 1; transform: none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kenya Quiz for Cash</h1>
+    <div class="notice">
+      <b>Welcome! To play, please pay 20 KES via M-PESA.</b><br>
+      Enter your M-PESA phone number below and tap <b>Pay &amp; Play</b>.<br>
+      You will receive a payment prompt on your phone.<br>
+      <span style="font-size:0.93em;color:#888;">Powered by Edwin Kibiwot (<b>0711 745 768</b>)</span>
+    </div>
+    <input type="text" id="phoneInput" maxlength="10" placeholder="Enter your M-PESA phone number" autocomplete="off"/>
+    <button id="payBtn" onclick="payAndPlay()">Pay &amp; Play</button>
+    <div id="loading"><span>Processing payment... Check your phone!</span></div>
+
+    <div id="quizSection" style="display:none;">
+      <h2 id="question"></h2>
+      <div id="answers"></div>
+      <button id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      <p>Score: <span id="score">0</span></p>
+      <input type="text" id="playerName" maxlength="18" placeholder="Enter your name for leaderboard" autocomplete="off"/>
+      <button onclick="saveScore()">Submit Score</button>
+    </div>
+
+    <div id="leaderboard">
+      <h3><span style="margin-right:5px;">🏆</span>Leaderboard</h3>
+      <ul id="leaderboardList"></ul>
+    </div>
+
+    <div class="footer">
+      Made with ♥ by Edwin Kibiwot
+    </div>
+  </div>
+  <script>
+    let currentQuestionIndex = 0;
+    let questions = [];
+    let score = 0;
+    let answered = false;
+
+    function payAndPlay() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      if (!/^07\d{8}$/.test(phone)) {
+        alert("Please enter a valid M-PESA number like 0712xxxxxx");
+        return;
+      }
+      document.getElementById('payBtn').disabled = true;
+      document.getElementById('loading').style.display = 'block';
+
+      // Send phone number to your backend to initiate payment
+      fetch('https://your-backend-api.com/api/mpesa/pay', { // <-- replace with your live endpoint!
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, amount: 20 }) // 20 KES
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          pollPaymentStatus(phone);
+        } else {
+          throw new Error(data.message || "Payment initiation failed.");
+        }
+      })
+      .catch(err => {
+        alert("Error: " + err.message + "\nTry again.");
+        document.getElementById('payBtn').disabled = false;
+        document.getElementById('loading').style.display = 'none';
+      });
+    }
+
+    // Poll backend for payment confirmation
+    function pollPaymentStatus(phone, tries = 0) {
+      if (tries > 20) { // Timeout after ~1 minute
+        alert("Payment not confirmed. If you paid, please contact support.");
+        document.getElementById('payBtn').disabled = false;
+        document.getElementById('loading').style.display = 'none';
+        return;
+      }
+      fetch(`https://your-backend-api.com/api/mpesa/status?phone=${encodeURIComponent(phone)}`) // <-- replace with your endpoint
+        .then(res => res.json())
+        .then(data => {
+          if (data.paid) {
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('payBtn').style.display = 'none';
+            document.getElementById('phoneInput').style.display = 'none';
+            loadQuestions();
+          } else {
+            setTimeout(() => pollPaymentStatus(phone, tries + 1), 3000);
+          }
+        })
+        .catch(() => {
+          setTimeout(() => pollPaymentStatus(phone, tries + 1), 3000);
+        });
+    }
+
+    function loadQuestions() {
+      fetch('https://opentdb.com/api.php?amount=10&type=multiple')
+        .then(res => res.json())
+        .then(data => {
+          questions = data.results;
+          score = 0;
+          currentQuestionIndex = 0;
+          answered = false;
+          document.getElementById('score').textContent = score;
+          showQuestion();
+        })
+        .catch(err => {
+          alert("Failed to load questions. Please check your connection.");
+          console.error(err);
+        });
+    }
+
+    function showQuestion() {
+      answered = false;
+      document.getElementById('nextBtn').disabled = true;
+      const q = questions[currentQuestionIndex];
+      document.getElementById('question').innerHTML = decodeHTML(q.question);
+      const allAnswers = [...q.incorrect_answers, q.correct_answer].sort(() => 0.5 - Math.random());
+      const answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = '';
+
+      allAnswers.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.textContent = decodeHTML(answer);
+        btn.onclick = () => checkAnswer(answer, q.correct_answer, btn);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function decodeHTML(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
+
+    function checkAnswer(selected, correct, btn) {
+      if (answered) return;
+      answered = true;
+      const answersBtns = document.querySelectorAll("#answers button");
+      answersBtns.forEach(b => b.disabled = true);
+      if (selected === correct) {
+        score++;
+        document.getElementById('score').textContent = score;
+        btn.style.background = "#38ef7d";
+        btn.style.color = "#fff";
+        btn.style.border = "1.5px solid #38ef7d";
+      } else {
+        btn.style.background = "#f67280";
+        btn.style.color = "#fff";
+        btn.style.border = "1.5px solid #f67280";
+        // Highlight correct answer
+        answersBtns.forEach(b => {
+          if (b.textContent === decodeHTML(correct)) {
+            b.style.background = "#38ef7d";
+            b.style.color = "#fff";
+            b.style.border = "1.5px solid #38ef7d";
+          }
+        });
+      }
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (!answered) {
+        alert("Please select an answer first!");
+        return;
+      }
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        setTimeout(() => {
+          alert('Quiz Finished! Your score is ' + score);
+        }, 200);
+      }
+    }
+
+    function saveScore() {
+      const playerName = document.getElementById('playerName').value.trim().substring(0,18);
+      if (!playerName) {
+        alert("Enter your name to submit score.");
+        return;
+      }
+      const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      leaderboard.push({ name: playerName, score });
+      leaderboard.sort((a, b) => b.score - a.score);
+      localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+      displayLeaderboard();
+      document.getElementById('playerName').value = "";
+    }
+
+    function displayLeaderboard() {
+      const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = '';
+      leaderboard.slice(0, 5).forEach((entry, i) => {
+        const li = document.createElement('li');
+        const badge = document.createElement('span');
+        badge.className = 'rank-badge';
+        badge.textContent = i+1;
+        li.appendChild(badge);
+        li.appendChild(document.createTextNode(`${entry.name}`));
+        const s = document.createElement('span');
+        s.style.fontWeight = "bold";
+        s.style.color = "#11998e";
+        s.style.float = "right";
+        s.style.marginLeft = "auto";
+        s.textContent = entry.score;
+        li.appendChild(s);
+        list.appendChild(li);
+      });
+    }
+
+    // Initial display
+    displayLeaderboard();
+  </script>
+</body>
+</html>
